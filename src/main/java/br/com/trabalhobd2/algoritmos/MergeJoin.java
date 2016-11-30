@@ -1,6 +1,5 @@
 package br.com.trabalhobd2.algoritmos;
 
-import br.com.trabalhobd2.app.Application;
 import br.com.trabalhobd2.daos.CodigoNCMDAO;
 import br.com.trabalhobd2.daos.ProdutoDAO;
 import br.com.trabalhobd2.entidades.*;
@@ -8,9 +7,9 @@ import br.com.trabalhobd2.entidades.*;
 import java.beans.PropertyVetoException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 public class MergeJoin {
   List<Produto> produtos = null;
@@ -24,6 +23,8 @@ public class MergeJoin {
   }
 
   public void mergeJoin() {
+    Relacao relacaoProduto = new Relacao();
+    Relacao relacaoNCM = new Relacao();
     long tempoInicial = System.currentTimeMillis();
     ProdutoDAO produtoDAO = new ProdutoDAO();
     CodigoNCMDAO fabricanteDAO = new CodigoNCMDAO();
@@ -32,20 +33,20 @@ public class MergeJoin {
     try {
       produtos = produtoDAO.getProdutos();
       codigoNCMs = fabricanteDAO.getCodigoNCM();
-      int indiceProduto = 0;
-      int indiceNCM = 0;
-      Produto produto = produtos.get(indiceProduto);
-      CodigoNCM codigoNCM = codigoNCMs.get(indiceNCM);
+      ordenaListaProduto();
+      ordenaListaNCM();
 
-      while (Integer.parseInt(produto.getCodNCM()) >= Integer.parseInt(codigoNCM.getCodNCM()) && resultado.size() != codigoNCMs.size()) {
-        if (produto.getCodNCM().equals(codigoNCM.getCodNCM())) {
-          ProdutoNCM produtoNCM = new ProdutoNCM(produto, codigoNCM);
-          produto = produtos.get(++indiceProduto);
-        } else {
-          if (Integer.parseInt(produto.getCodNCM()) > Integer.parseInt(codigoNCM.getCodNCM())) {
-            codigoNCM = codigoNCMs.get(++indiceNCM);
-          }
-        }
+      while (!relacaoProduto.ePosicaoFinal() && !relacaoNCM.ePosicaoFinal()) {
+        Produto produto = produtos.get(relacaoProduto.getPosicao());
+        CodigoNCM codigoNCM = codigoNCMs.get(relacaoNCM.getPosicao());
+        if (Integer.parseInt(produto.getCodNCM()) == Integer.parseInt(codigoNCM.getCodNCM())) {
+          resultado.add(new ProdutoNCM(produto, codigoNCM));
+          relacaoProduto.avancar(produtos.size());
+          relacaoNCM.avancar(codigoNCMs.size());
+        } else if (Integer.parseInt(produto.getCodNCM()) < Integer.parseInt(codigoNCM.getCodNCM()))
+          relacaoProduto.avancar(produtos.size());
+        else
+          relacaoNCM.avancar(codigoNCMs.size());
       }
       long tempo = System.currentTimeMillis() - tempoInicial;
       ExibirInformacoes exibirInformacoes = new ExibirInformacoes("Merge Join", produtos.size(), codigoNCMs.size(), resultado.size(), tempo);
@@ -57,5 +58,25 @@ public class MergeJoin {
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     }
+  }
+
+  public void ordenaListaProduto() {
+    Collections.sort(produtos, new Comparator<Object>() {
+      public int compare(Object o1, Object o2) {
+        Produto p1 = (Produto) o1;
+        Produto p2 = (Produto) o2;
+        return Integer.parseInt(p1.getCodNCM()) < Integer.parseInt(p2.getCodNCM()) ? -1 : (Integer.parseInt(p1.getCodNCM()) > Integer.parseInt(p2.getCodNCM()) ? +1 : 0);
+      }
+    });
+  }
+
+  public void ordenaListaNCM() {
+    Collections.sort(codigoNCMs, new Comparator<Object>() {
+      public int compare(Object o1, Object o2) {
+        CodigoNCM p1 = (CodigoNCM) o1;
+        CodigoNCM p2 = (CodigoNCM) o2;
+        return Integer.parseInt(p1.getCodNCM()) < Integer.parseInt(p2.getCodNCM()) ? -1 : (Integer.parseInt(p1.getCodNCM()) > Integer.parseInt(p2.getCodNCM()) ? +1 : 0);
+      }
+    });
   }
 }
