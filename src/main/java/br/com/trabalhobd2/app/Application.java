@@ -216,19 +216,19 @@ public class Application extends JFrame {
     tabela = new JTable(modelo);
     modelo.addColumn("CodProduto");
     modelo.addColumn("Descricao");
-    modelo.addColumn("CodFabricante");
     modelo.addColumn("CodEAN");
     modelo.addColumn("NumRegMS");
     modelo.addColumn("CodNCM");
     modelo.addColumn("PrcFabricante");
     modelo.addColumn("PrcVenda");
-    modelo.addColumn("CodFabricante");
+    modelo.addColumn("CodNCM");
     modelo.addColumn("Descricao");
     //tabela.getColumnModel().getColumn(0).setPreferredWidth(5);
     tabela.getColumnModel().getColumn(1).setPreferredWidth(300);
+    tabela.getColumnModel().getColumn(2).setPreferredWidth(100);
     tabela.getColumnModel().getColumn(3).setPreferredWidth(100);
-    tabela.getColumnModel().getColumn(4).setPreferredWidth(100);
-    tabela.getColumnModel().getColumn(9).setPreferredWidth(300);
+    tabela.getColumnModel().getColumn(7).setPreferredWidth(100);
+    tabela.getColumnModel().getColumn(8).setPreferredWidth(300);
     //tabela.getColumnModel().getColumn(2).setPreferredWidth(400);
     //tabela.getColumnModel().getColumn(3).setPreferredWidth(50);*/
     // tabela.addMouseListener(new ActionSelecionarTabela());

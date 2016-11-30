@@ -12,40 +12,43 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HashJoin {
+public class MergeJoin {
   List<Produto> produtos = null;
   List<CodigoNCM> codigoNCMs = null;
   List<ProdutoNCM> resultado = null;
 
   public void iniciar() {
-    hashJoin();
+    mergeJoin();
     ListarTabela listarTabela = new ListarTabela(resultado);
     listarTabela.pesquisar();
   }
 
-  public void hashJoin() {
+  public void mergeJoin() {
     long tempoInicial = System.currentTimeMillis();
     ProdutoDAO produtoDAO = new ProdutoDAO();
     CodigoNCMDAO fabricanteDAO = new CodigoNCMDAO();
     resultado = new ArrayList<>();
-    Map<String, CodigoNCM> map = new HashMap<>();
 
     try {
       produtos = produtoDAO.getProdutos();
       codigoNCMs = fabricanteDAO.getCodigoNCM();
-      for (CodigoNCM codigoNCM : codigoNCMs) {
-        map.put(codigoNCM.getCodNCM(), codigoNCM);
-      }
+      int indiceProduto = 0;
+      int indiceNCM = 0;
+      Produto produto = produtos.get(indiceProduto);
+      CodigoNCM codigoNCM = codigoNCMs.get(indiceNCM);
 
-      for (Produto produto : produtos) {
-        CodigoNCM fabricante = map.get(produto.getCodNCM());
-        if (fabricante != null) {
-          ProdutoNCM produtoFabricante = new ProdutoNCM(produto, fabricante);
-          resultado.add(produtoFabricante);
+      while (Integer.parseInt(produto.getCodNCM()) >= Integer.parseInt(codigoNCM.getCodNCM()) && resultado.size() != codigoNCMs.size()) {
+        if (produto.getCodNCM().equals(codigoNCM.getCodNCM())) {
+          ProdutoNCM produtoNCM = new ProdutoNCM(produto, codigoNCM);
+          produto = produtos.get(++indiceProduto);
+        } else {
+          if (Integer.parseInt(produto.getCodNCM()) > Integer.parseInt(codigoNCM.getCodNCM())) {
+            codigoNCM = codigoNCMs.get(++indiceNCM);
+          }
         }
       }
       long tempo = System.currentTimeMillis() - tempoInicial;
-      ExibirInformacoes exibirInformacoes = new ExibirInformacoes("Hash Join", produtos.size(), codigoNCMs.size(), resultado.size(), tempo);
+      ExibirInformacoes exibirInformacoes = new ExibirInformacoes("Merge Join", produtos.size(), codigoNCMs.size(), resultado.size(), tempo);
       exibirInformacoes.setMengasem();
     } catch (PropertyVetoException e) {
       e.printStackTrace();

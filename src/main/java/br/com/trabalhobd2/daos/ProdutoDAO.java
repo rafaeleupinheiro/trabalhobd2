@@ -1,7 +1,6 @@
 package br.com.trabalhobd2.daos;
 
 import br.com.trabalhobd2.conexao.Conexao;
-import br.com.trabalhobd2.entidades.Fabricante;
 import br.com.trabalhobd2.entidades.Produto;
 
 import java.beans.PropertyVetoException;
@@ -26,7 +25,6 @@ public class ProdutoDAO {
         Produto produto = new Produto();
         produto.setCodProduto(rs.getInt("CodProduto"));
         produto.setDescricao(rs.getString("Descricao"));
-        produto.setCodFabricante(rs.getInt("CodFabricante"));
         produto.setCodEAN(rs.getString("CodEAN"));
         produto.setNumRegMS(rs.getString("NumRegMS"));
         produto.setCodNCM(rs.getString("CodNCM"));

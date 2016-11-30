@@ -8,11 +8,9 @@ import br.com.trabalhobd2.entidades.*;
 import java.beans.PropertyVetoException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class HashJoin {
+public class BlockNestedLoopJoin {
   List<Produto> produtos = null;
   List<CodigoNCM> codigoNCMs = null;
   List<ProdutoNCM> resultado = null;
@@ -28,24 +26,22 @@ public class HashJoin {
     ProdutoDAO produtoDAO = new ProdutoDAO();
     CodigoNCMDAO fabricanteDAO = new CodigoNCMDAO();
     resultado = new ArrayList<>();
-    Map<String, CodigoNCM> map = new HashMap<>();
 
     try {
       produtos = produtoDAO.getProdutos();
       codigoNCMs = fabricanteDAO.getCodigoNCM();
-      for (CodigoNCM codigoNCM : codigoNCMs) {
-        map.put(codigoNCM.getCodNCM(), codigoNCM);
-      }
 
       for (Produto produto : produtos) {
-        CodigoNCM fabricante = map.get(produto.getCodNCM());
-        if (fabricante != null) {
-          ProdutoNCM produtoFabricante = new ProdutoNCM(produto, fabricante);
-          resultado.add(produtoFabricante);
+        for (CodigoNCM codigoNCM : codigoNCMs) {
+          if (produto.getCodNCM().equals(codigoNCM.getCodNCM())) {
+            ProdutoNCM produtoNCM = new ProdutoNCM(produto, codigoNCM);
+            resultado.add(produtoNCM);
+            break;
+          }
         }
       }
       long tempo = System.currentTimeMillis() - tempoInicial;
-      ExibirInformacoes exibirInformacoes = new ExibirInformacoes("Hash Join", produtos.size(), codigoNCMs.size(), resultado.size(), tempo);
+      ExibirInformacoes exibirInformacoes = new ExibirInformacoes("Block Nested-Loop Join", produtos.size(), codigoNCMs.size(), resultado.size(), tempo);
       exibirInformacoes.setMengasem();
     } catch (PropertyVetoException e) {
       e.printStackTrace();

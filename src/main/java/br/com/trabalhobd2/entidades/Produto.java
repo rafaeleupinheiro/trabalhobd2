@@ -3,17 +3,15 @@ package br.com.trabalhobd2.entidades;
 public class Produto {
   private int codProduto;
   private String descricao;
-  private int codFabricante;
   private String codEAN;
   private String numRegMS;
   private String codNCM;
   private float prcFaricante;
   private float prcVenda;
 
-  public Produto(int codProduto, String descricao, int codFabricante, String codEAN, String numRegMS, String codNCM, float prcFaricante, float prcVenda) {
+  public Produto(int codProduto, String descricao, String codEAN, String numRegMS, String codNCM, float prcFaricante, float prcVenda) {
     this.codProduto = codProduto;
     this.descricao = descricao;
-    this.codFabricante = codFabricante;
     this.codEAN = codEAN;
     this.numRegMS = numRegMS;
     this.codNCM = codNCM;
@@ -38,14 +36,6 @@ public class Produto {
 
   public void setDescricao(String descricao) {
     this.descricao = descricao;
-  }
-
-  public int getCodFabricante() {
-    return codFabricante;
-  }
-
-  public void setCodFabricante(int codFabricante) {
-    this.codFabricante = codFabricante;
   }
 
   public String getCodEAN() {
