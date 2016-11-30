@@ -2,7 +2,6 @@ package br.com.trabalhobd2.app;
 
 import br.com.trabalhobd2.acoes.ActionConectar;
 import br.com.trabalhobd2.acoes.ActionDesconectar;
-import br.com.trabalhobd2.acoes.ActionEnter;
 import br.com.trabalhobd2.acoes.ActionSelecionarAlgoritmo;
 import br.com.trabalhobd2.config.AppConfig;
 import br.com.trabalhobd2.config.Config;
@@ -87,7 +86,6 @@ public class Application extends JFrame {
 
     txfServidor = new JTextField();
     txfServidor.setBounds(85, 42, 108, 20);
-    txfServidor.addKeyListener(new ActionEnter());
     txfServidor.setText(config.getServidor());
     painelConfiguracao.add(txfServidor);
     txfServidor.setColumns(10);
